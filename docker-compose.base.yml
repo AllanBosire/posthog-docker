@@ -13,7 +13,7 @@ services:
             - --providers.docker.exposedbydefault=false
             - --providers.docker.constraints=Label(`com.docker.compose.project`, `${COMPOSE_PROJECT_NAME}`)
             - --entrypoints.web.address=:80
-    
+
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
         depends_on:
@@ -189,7 +189,8 @@ services:
             RUST_LOG: "info,rdkafka=warn"
         labels:
             - traefik.enable=true
-            - traefik.http.routers.capture.rule=PathPrefix(`/e`,`/i/v0`,`/batch`,`/capture`)
+            # - traefik.http.routers.capture.rule=PathPrefix(`/e`,`/i/v0`,`/batch`,`/capture`)
+            - traefik.http.routers.capture.rule=(PathPrefix(`/e`) || PathPrefix(`/i/v0`) || PathPrefix(`/batch`) || PathPrefix(`/capture`))
             - traefik.http.services.capture.loadbalancer.server.port=3000
 
     replay-capture:
@@ -310,7 +311,8 @@ services:
             COOKIELESS_REDIS_PORT: 6379
         labels:
             - traefik.enable=true
-            - traefik.http.routers.plugins.rule=PathPrefix(`/public/webhooks`,`/public/m`)
+            # - traefik.http.routers.plugins.rule=PathPrefix(`/public/webhooks`,`/public/m`)
+            - traefik.http.routers.plugins.rule=(PathPrefix(`/public/webhooks`) || PathPrefix(`/public/m`))
             - traefik.http.services.plugins.loadbalancer.server.port=6738
 
     livestream:
