@@ -292,6 +292,11 @@ services:
         volumes:
             - ./posthog/docker/livestream/configs-hobby.yml:/configs/configs.yml
 
+    geoip-updater:
+        extends:
+            file: docker-compose.base.yml
+            service: geoip-init
+
     feature-flags:
         build:
             context: ./posthog/rust
@@ -316,3 +321,4 @@ volumes:
     redis7-data:
     kafka-data:
     redpanda-data:
+    geo-ipdb:

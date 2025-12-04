@@ -11,13 +11,9 @@ services:
         volumes:
             - /root/.caddy
         environment:
-            CADDY_TLS_BLOCK: ''
-            CADDY_HOST: 'http://localhost:8000'
             CADDYFILE: |
-                {
-                ${CADDY_TLS_BLOCK:-}
-                }
-                ${CADDY_HOST:-http://localhost:8000} {
+                http://:80 {
+
                     @replay-capture {
                         path /s
                         path /s/
@@ -73,7 +69,6 @@ services:
                         reverse_proxy web:8000
                     }
                 }
-
     db:
         image: postgres:15.12-alpine
         restart: on-failure
@@ -282,6 +277,23 @@ services:
             SKIP_READS: 'false'
             FILTER_MODE: 'opt-out'
 
+    geoip-init:
+        image: alpine:latest
+        command: >
+            sh -c "
+            echo \"Downloading GeoIP database file\" &&
+                apk add --no-cache curl brotli ca-certificates &&
+                mkdir -p /share &&
+                if [ ! -f /share/GeoLite2-City.mmdb ]; then
+                    curl -L 'https://mmdbcdn.posthog.net/' --http1.1 | brotli --decompress --output=/share/GeoLite2-City.mmdb &&
+                    echo '{\"date\": \"'"$(date +%Y-%m-%d)"'\"}' > /share/GeoLite2-City.json &&
+                    chmod 644 /share/GeoLite2-City.mmdb &&
+                    chmod 644 /share/GeoLite2-City.json
+                fi"
+        volumes:
+            - geo-ipdb:/share
+        restart: "no"
+
     feature-flags:
         image: ghcr.io/posthog/posthog/feature-flags:master
         build:
@@ -290,7 +302,7 @@ services:
                 BIN: feature-flags
         restart: on-failure
         volumes:
-            - ./share:/share
+            - geo-ipdb:/share
         environment:
             WRITE_DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
             READ_DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
@@ -498,3 +510,4 @@ networks:
 
 volumes:
     redpanda-data:
+    geo-ipdb:
