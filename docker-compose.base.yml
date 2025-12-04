@@ -190,7 +190,7 @@ services:
         labels:
             - traefik.enable=true
             # - traefik.http.routers.capture.rule=PathPrefix(`/e`,`/i/v0`,`/batch`,`/capture`)
-            - traefik.http.routers.capture.rule=(Path(`/e`) || PathPrefix(`/e/`) || PathPrefix(`/i/v0`) || Path(`/batch`) || PathPrefix(`/batch/`) || Path(`/capture`) || PathPrefix(`/capture/`))
+            - traefik.http.routers.capture.rule=PathRegexp(`^(/e(/.*)?|/i/v0(/.*)?|/batch(/.*)?|/capture(/.*)?)$`)
             - traefik.http.services.capture.loadbalancer.server.port=3000
 
     replay-capture:
@@ -208,7 +208,7 @@ services:
             CAPTURE_MODE: recordings
         labels:
             - traefik.enable=true
-            - traefik.http.routers.replay-capture.rule=Path(`/s`) || PathPrefix(`/s/`)
+            - traefik.http.routers.replay-capture.rule=PathRegexp(`^/s(/.*)?$`)
             - traefik.http.services.replay-capture.loadbalancer.server.port=3000
 
     capture-logs:
@@ -312,7 +312,7 @@ services:
         labels:
             - traefik.enable=true
             # - traefik.http.routers.plugins.rule=PathPrefix(`/public/webhooks`,`/public/m`)
-            - traefik.http.routers.plugins.rule=(PathPrefix(`/public/webhooks`) || PathPrefix(`/public/m`))
+            - traefik.http.routers.plugins.rule=PathRegexp(`^/public/(webhooks|m)(/.*)?$`)
             - traefik.http.services.plugins.loadbalancer.server.port=6738
 
     livestream:
