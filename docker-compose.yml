@@ -165,6 +165,9 @@ services:
             OTEL_EXPORTER_OTLP_ENDPOINT: ''
             COOKIELESS_REDIS_HOST: redis7
             COOKIELESS_REDIS_PORT: 6379
+            REDIS_URL: 'redis://redis:6379/'
+            POSTHOG_REDIS_HOST: redis
+            POSTHOG_REDIS_PORT: 6379
             
         depends_on:
             - db
