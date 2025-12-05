@@ -105,10 +105,10 @@ services:
         networks:
             - default
 
-    web:
+    hog-web:
         extends:
             file: docker-compose.base.yml
-            service: web
+            service: hog-web
         command: /compose/start
         volumes:
             - ./compose:/compose
@@ -194,7 +194,7 @@ services:
             file: docker-compose.base.yml
             service: proxy
         depends_on:
-            - web
+            - hop-web
         networks:
             - default
 
