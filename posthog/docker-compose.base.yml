@@ -4,24 +4,81 @@
 
 services:
     proxy:
-        image: traefik
-        command:
-            - --log.level=INFO
-            - --accesslog=true
-            - --api.insecure=true
-            - --providers.docker=true
-            - --providers.docker.exposedbydefault=false
-            - --providers.docker.constraints=Label(`com.docker.compose.project`, `${COMPOSE_PROJECT_NAME}`)
-            - --entrypoints.web.address=:80
-
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
+        image: caddy:2.7
+        restart: always
+        ports:
+            - "80:80"
         depends_on:
             - web
             - capture
             - replay-capture
             - feature-flags
             - plugins
+        entrypoint: sh
+        command: -c 'echo "$$CADDYFILE" > /etc/caddy/Caddyfile && caddy fmt --overwrite /etc/caddy/Caddyfile && exec caddy run --config /etc/caddy/Caddyfile'
+        environment:
+            CADDYFILE: |
+                :80 {
+                    log {
+                        output stdout
+                        format consolew
+                    }
+                
+                    @replay-capture {
+                        path /s
+                        path /s/
+                        path /s/*
+                    }
+
+                    @capture {
+                        path /e
+                        path /e/
+                        path /e/*
+                        path /i/v0
+                        path /i/v0/
+                        path /i/v0/*
+                        path /batch
+                        path /batch/
+                        path /batch/*
+                        path /capture
+                        path /capture/
+                        path /capture/*
+                    }
+
+                    @flags {
+                        path /flags
+                        path /flags/
+                        path /flags/*
+                    }
+
+                    @webhooks {
+                        path /public/webhooks
+                        path /public/webhooks/
+                        path /public/webhooks/*
+                        path /public/m/
+                        path /public/m/*
+                    }
+
+                    handle @capture {
+                        reverse_proxy capture:3000
+                    }
+
+                    handle @replay-capture {
+                        reverse_proxy replay-capture:3000
+                    }
+
+                    handle @flags {
+                        reverse_proxy feature-flags:3001
+                    }
+
+                    handle @webhooks {
+                        reverse_proxy plugins:6738
+                    }
+
+                    handle {
+                        reverse_proxy web:8000
+                    }
+                }
 
     db:
         image: postgres:15.12-alpine
@@ -168,11 +225,6 @@ services:
         <<: *worker
         command: ./bin/start-backend & ./bin/start-frontend
         restart: on-failure
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.web.rule=PathPrefix(`/`)
-            - traefik.http.routers.web.priority=1  # Add low priority for catch-all
-            - traefik.http.services.web.loadbalancer.server.port=8000
 
     capture:
         image: ghcr.io/posthog/posthog/capture:master
@@ -188,16 +240,6 @@ services:
             REDIS_URL: "redis://redis:6379/"
             CAPTURE_MODE: events
             RUST_LOG: "info,rdkafka=warn"
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.capture.rule=(
-                    Path(`/e`) || PathPrefix(`/e/`) ||
-                    Path(`/i/v0`) || PathPrefix(`/i/v0/`) ||
-                    Path(`/batch`) || PathPrefix(`/batch/`) ||
-                    Path(`/capture`) || PathPrefix(`/capture/`)
-                )
-            - traefik.http.routers.capture.priority=100
-            - traefik.http.services.capture.loadbalancer.server.port=3000
 
     replay-capture:
         image: ghcr.io/posthog/posthog/capture:master
@@ -212,11 +254,6 @@ services:
             KAFKA_HOSTS: "kafka:9092"
             REDIS_URL: "redis://redis:6379/"
             CAPTURE_MODE: recordings
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.replay-capture.priority=100  # Changed from capture to replay-capture
-            - traefik.http.routers.replay-capture.rule=Path(`/s`) || PathPrefix(`/s/`)
-            - traefik.http.services.replay-capture.loadbalancer.server.port=3000
 
     capture-logs:
         image: ghcr.io/posthog/posthog/capture-logs:master
@@ -296,11 +333,6 @@ services:
             RUST_LOG: "info"
             COOKIELESS_REDIS_HOST: redis7
             COOKIELESS_REDIS_PORT: 6379
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.flags.priority=100  # Changed from capture to flags
-            - traefik.http.routers.flags.rule=Path(`/flags`) || PathPrefix(`/flags/`)
-            - traefik.http.services.flags.loadbalancer.server.port=3001
 
     plugins:
         command: ./bin/plugin-server --no-restart-loop
@@ -317,14 +349,6 @@ services:
             CLICKHOUSE_VERIFY: "false"
             COOKIELESS_REDIS_HOST: redis7
             COOKIELESS_REDIS_PORT: 6379
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.plugins.rule=(
-                    Path(`/public/webhooks`) || PathPrefix(`/public/webhooks/`) ||
-                    Path(`/public/m`) || PathPrefix(`/public/m/`)
-                )
-            - traefik.http.routers.plugins.priority=100  # Changed from capture to plugins
-            - traefik.http.services.plugins.loadbalancer.server.port=6738
 
     livestream:
         image: "ghcr.io/posthog/livestream:main"
@@ -393,12 +417,14 @@ services:
                 condition: service_healthy
             elasticsearch:
                 condition: service_started
+
     temporal-admin-tools:
         environment:
             - TEMPORAL_CLI_ADDRESS=temporal:7233
         image: temporalio/admin-tools:1.20.0
         stdin_open: true
         tty: true
+        
     temporal-ui:
         depends_on:
             - temporal
