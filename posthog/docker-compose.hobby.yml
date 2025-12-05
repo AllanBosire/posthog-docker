@@ -139,7 +139,16 @@ services:
             - default
 
     plugins:
-        command: ./bin/plugin-server --no-restart-loop
+        command: sh -c "
+                apt-get update -qq && 
+                apt-get install -y socat && 
+                REDIS_HOST=$$(echo $$REDIS_URL | sed -e 's|redis://||' -e 's|/.*||' -e 's|:.*||') && 
+                REDIS_PORT=$$(echo $$REDIS_URL | sed -e 's|redis://||' -e 's|/.*||' -e 's|.*:||') && 
+                REDIS_PORT=$${REDIS_PORT:-6379} && 
+                echo \"Forwarding 6479 -> $$REDIS_HOST:$$REDIS_PORT\" && 
+                socat TCP-LISTEN:6479,fork,reuseaddr TCP:$$REDIS_HOST:$$REDIS_PORT & 
+                sleep 2 && 
+                ./bin/plugin-server --no-restart-loop"
         extends:
             file: docker-compose.base.yml
             service: plugins
