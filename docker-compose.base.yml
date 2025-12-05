@@ -7,7 +7,7 @@ services:
         image: caddy
         restart: always
         depends_on:
-            - web
+            - hog-web
             - capture
             - replay-capture
             - feature-flags
@@ -74,7 +74,7 @@ services:
                     }
 
                     handle {
-                        reverse_proxy web:8000
+                        reverse_proxy hog-web:8000
                     }
                 }
 
@@ -219,7 +219,7 @@ services:
             CDP_API_URL: "http://plugins:6738"
             FLAGS_REDIS_ENABLED: false
 
-    web:
+    hog-web:
         <<: *worker
         command: ./bin/start-backend & ./bin/start-frontend
         restart: on-failure
