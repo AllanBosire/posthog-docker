@@ -93,12 +93,12 @@ services:
         environment:
             SITE_URL: https://$DOMAIN
             SECRET_KEY: $POSTHOG_SECRET
-            OBJECT_STORAGE_ACCESS_KEY_ID: 'object_storage_root_user'
-            OBJECT_STORAGE_SECRET_ACCESS_KEY: 'object_storage_root_password'
+            OBJECT_STORAGE_ACCESS_KEY_ID: "object_storage_root_user"
+            OBJECT_STORAGE_SECRET_ACCESS_KEY: "object_storage_root_password"
             OBJECT_STORAGE_ENDPOINT: http://objectstorage:19000
             SESSION_RECORDING_V2_S3_ENDPOINT: http://seaweedfs:8333
-            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: 'any'
-            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: 'any'
+            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: "any"
+            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: "any"
             OBJECT_STORAGE_ENABLED: true
             ENCRYPTION_SALT_KEYS: $ENCRYPTION_SALT_KEYS
         image: $REGISTRY_URL:$POSTHOG_APP_TAG
@@ -115,19 +115,19 @@ services:
         image: $REGISTRY_URL:$POSTHOG_APP_TAG
         environment:
             SITE_URL: https://$DOMAIN
-            LIVESTREAM_HOST: 'https://${DOMAIN}:8666'
+            LIVESTREAM_HOST: "https://${DOMAIN}:8666"
             SECRET_KEY: $POSTHOG_SECRET
-            OBJECT_STORAGE_ACCESS_KEY_ID: 'object_storage_root_user'
-            OBJECT_STORAGE_SECRET_ACCESS_KEY: 'object_storage_root_password'
-            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: 'any'
-            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: 'any'
+            OBJECT_STORAGE_ACCESS_KEY_ID: "object_storage_root_user"
+            OBJECT_STORAGE_SECRET_ACCESS_KEY: "object_storage_root_password"
+            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: "any"
+            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: "any"
             OBJECT_STORAGE_ENDPOINT: http://objectstorage:19000
             SESSION_RECORDING_V2_S3_ENDPOINT: http://seaweedfs:8333
             OBJECT_STORAGE_ENABLED: true
             ENCRYPTION_SALT_KEYS: $ENCRYPTION_SALT_KEYS
-            OTEL_SERVICE_NAME: 'posthog'
-            OTEL_EXPORTER_OTLP_ENDPOINT: ''
-            OTEL_SDK_DISABLED: 'true'
+            OTEL_SERVICE_NAME: "posthog"
+            OTEL_EXPORTER_OTLP_ENDPOINT: ""
+            OTEL_SDK_DISABLED: "true"
         depends_on:
             - db
             - redis
@@ -139,7 +139,7 @@ services:
             - default
 
     plugins:
-        command: /compose/start-plugin-server
+        command: sh -c "chmod +x /compose/start-plugin-server && /compose/start-plugin-server"
         extends:
             file: docker-compose.base.yml
             service: plugins
@@ -147,10 +147,10 @@ services:
         environment:
             SITE_URL: https://$DOMAIN
             SECRET_KEY: $POSTHOG_SECRET
-            OBJECT_STORAGE_ACCESS_KEY_ID: 'object_storage_root_user'
-            OBJECT_STORAGE_SECRET_ACCESS_KEY: 'object_storage_root_password'
-            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: 'any'
-            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: 'any'
+            OBJECT_STORAGE_ACCESS_KEY_ID: "object_storage_root_user"
+            OBJECT_STORAGE_SECRET_ACCESS_KEY: "object_storage_root_password"
+            SESSION_RECORDING_V2_S3_ACCESS_KEY_ID: "any"
+            SESSION_RECORDING_V2_S3_SECRET_ACCESS_KEY: "any"
             OBJECT_STORAGE_ENDPOINT: http://objectstorage:19000
             SESSION_RECORDING_V2_S3_ENDPOINT: http://seaweedfs:8333
             OBJECT_STORAGE_ENABLED: true
@@ -159,13 +159,13 @@ services:
             POSTHOG_REDIS_CDP_REDIS_PORT: 6379
             POSTHOG_REDIS_CDP_REDIS_HOST: redis7
             ENCRYPTION_SALT_KEYS: $ENCRYPTION_SALT_KEYS
-            CYCLOTRON_DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
-            PERSONS_DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
-            BEHAVIORAL_COHORTS_DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
-            OTEL_EXPORTER_OTLP_ENDPOINT: ''
+            CYCLOTRON_DATABASE_URL: "postgres://posthog:posthog@db:5432/posthog"
+            PERSONS_DATABASE_URL: "postgres://posthog:posthog@db:5432/posthog"
+            BEHAVIORAL_COHORTS_DATABASE_URL: "postgres://posthog:posthog@db:5432/posthog"
+            OTEL_EXPORTER_OTLP_ENDPOINT: ""
             COOKIELESS_REDIS_HOST: redis7
             COOKIELESS_REDIS_PORT: 6379
-            REDIS_URL: 'redis://redis:6379/'
+            REDIS_URL: "redis://redis:6379/"
             POSTHOG_REDIS_HOST: redis
             POSTHOG_REDIS_PORT: 6379
         volumes:
@@ -198,8 +198,8 @@ services:
         volumes:
             - objectstorage:/data
         ports:
-            - '19000:19000'
-            - '19001:19001'
+            - "19000:19000"
+            - "19001:19001"
         networks:
             - default
 
@@ -295,8 +295,8 @@ services:
         build:
             context: ./posthog/rust
         environment:
-            DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
-            KAFKA_HOSTS: 'kafka:9092'
+            DATABASE_URL: "postgres://posthog:posthog@db:5432/posthog"
+            KAFKA_HOSTS: "kafka:9092"
         depends_on:
             db:
                 condition: service_healthy
@@ -339,7 +339,7 @@ services:
         environment:
             - LIVESTREAM_JWT_SECRET=${POSTHOG_SECRET}
         ports:
-            - '8666:8080'
+            - "8666:8080"
         volumes:
             - ./posthog/docker/livestream/configs-hobby.yml:/configs/configs.yml
         networks:
