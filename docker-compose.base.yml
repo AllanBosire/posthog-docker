@@ -143,7 +143,7 @@ services:
             - --mode dev-container
             - --smp 2
             - --memory 3G
-            - --reserve-memory 500M
+            - --reserve-memory 0M
             - --overprovisioned
             - --set redpanda.empty_seed_starts_cluster=false
             - --seeds kafka:33145
