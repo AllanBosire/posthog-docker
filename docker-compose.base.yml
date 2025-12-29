@@ -142,8 +142,8 @@ services:
             - --advertise-rpc-addr kafka:33145
             - --mode dev-container
             - --smp 2
-            - --memory 3G
-            - --reserve-memory 0M
+            - --memory 2G
+            - --reserve-memory 500M
             - --overprovisioned
             - --set redpanda.empty_seed_starts_cluster=false
             - --seeds kafka:33145
