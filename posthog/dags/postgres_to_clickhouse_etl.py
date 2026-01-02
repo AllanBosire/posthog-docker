@@ -27,8 +27,7 @@ from dagster._core.definitions.backfill_policy import BackfillPolicy
 
 from posthog.clickhouse.client import sync_execute
 from posthog.clickhouse.cluster import Query, get_cluster
-
-from dags.common import JobOwners
+from posthog.dags.common import JobOwners
 
 
 class PostgresToClickHouseETLConfig(Config):

@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import psycopg2
 from dagster import build_op_context
 
-from dags.persons_without_distinct_ids_cleanup import (
+from posthog.dags.persons_without_distinct_ids_cleanup import (
     PersonsNoDistinctIdsCleanupConfig,
     create_chunks_for_pwdc,
     get_id_range_for_pwdc,
@@ -372,7 +372,7 @@ class TestScanDeleteChunkForPwdc:
 
         mock_run = MagicMock(job_name="test_job")
         with (
-            patch("dags.persons_without_distinct_ids_cleanup.time.sleep"),
+            patch("posthog.dags.persons_without_distinct_ids_cleanup.time.sleep"),
             patch.object(type(context), "run", PropertyMock(return_value=mock_run)),
         ):
             scan_delete_chunk_for_pwdc(context, config, chunk)
@@ -423,7 +423,7 @@ class TestScanDeleteChunkForPwdc:
 
         mock_run = MagicMock(job_name="test_job")
         with (
-            patch("dags.persons_without_distinct_ids_cleanup.time.sleep"),
+            patch("posthog.dags.persons_without_distinct_ids_cleanup.time.sleep"),
             patch.object(type(context), "run", PropertyMock(return_value=mock_run)),
         ):
             scan_delete_chunk_for_pwdc(context, config, chunk)

@@ -1,7 +1,6 @@
 import dagster
 
-from dags import oauth, user_product_list
-from dags.sdk_doctor import github_sdk_versions, team_sdk_versions
+from products.growth.dags import github_sdk_versions, oauth, team_sdk_versions, user_product_list
 
 from . import resources
 

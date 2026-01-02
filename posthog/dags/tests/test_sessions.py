@@ -1,6 +1,6 @@
 from parameterized import parameterized
 
-from dags.sessions import tags_for_sessions_partition
+from posthog.dags.sessions import tags_for_sessions_partition
 
 
 class TestTagsForSessionsPartition:

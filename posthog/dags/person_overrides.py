@@ -9,11 +9,10 @@ from clickhouse_driver import Client
 
 from posthog import settings
 from posthog.clickhouse.cluster import ClickhouseCluster, MutationWaiter
+from posthog.dags.common import JobOwners
+from posthog.dags.common.overrides_manager import OverridesSnapshotDictionary, OverridesSnapshotTable
 from posthog.models.event.sql import EVENTS_DATA_TABLE
 from posthog.models.person.sql import PERSON_DISTINCT_ID_OVERRIDES_TABLE
-
-from dags.common import JobOwners
-from dags.common.overrides_manager import OverridesSnapshotDictionary, OverridesSnapshotTable
 
 
 @dataclass

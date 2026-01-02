@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import psycopg2
 from dagster import build_op_context
 
-from dags.delete_persons_from_trigger_log import (
+from posthog.dags.delete_persons_from_trigger_log import (
     DeletePersonsFromTriggerLogConfig,
     create_team_chunks_for_dpft,
     get_team_ids_for_dpft,
@@ -280,7 +280,7 @@ class TestScanDeleteChunkForDpft:
 
         mock_run = MagicMock(job_name="test_job")
         with (
-            patch("dags.delete_persons_from_trigger_log.time.sleep"),
+            patch("posthog.dags.delete_persons_from_trigger_log.time.sleep"),
             patch.object(type(context), "run", PropertyMock(return_value=mock_run)),
         ):
             scan_delete_chunk_for_dpft(context, config, team_id)
@@ -322,7 +322,7 @@ class TestScanDeleteChunkForDpft:
 
         mock_run = MagicMock(job_name="test_job")
         with (
-            patch("dags.delete_persons_from_trigger_log.time.sleep"),
+            patch("posthog.dags.delete_persons_from_trigger_log.time.sleep"),
             patch.object(type(context), "run", PropertyMock(return_value=mock_run)),
         ):
             scan_delete_chunk_for_dpft(context, config, team_id)

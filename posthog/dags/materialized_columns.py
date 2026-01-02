@@ -11,8 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from posthog import settings
 from posthog.clickhouse.cluster import AlterTableMutationRunner, ClickhouseCluster, HostInfo
-
-from dags.common import JobOwners
+from posthog.dags.common import JobOwners
 
 K1 = TypeVar("K1")
 K2 = TypeVar("K2")

@@ -1,6 +1,6 @@
 import dagster
 
-from dags import symbol_set_cleanup
+from products.error_tracking.dags import symbol_set_cleanup
 
 from . import resources
 

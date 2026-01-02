@@ -14,8 +14,7 @@ from dagster_aws.s3 import S3Resource
 
 from posthog.clickhouse.client.connection import NodeRole, Workload
 from posthog.clickhouse.cluster import ClickhouseCluster
-
-from dags.common import JobOwners, check_for_concurrent_runs
+from posthog.dags.common import JobOwners, check_for_concurrent_runs
 
 NO_SHARD_PATH = "noshard"
 
@@ -49,7 +48,6 @@ def get_max_backup_bandwidth() -> str:
 
 
 SHARDED_TABLES = [
-    "sharded_events",
     "sharded_app_metrics",
     "sharded_app_metrics2",
     "sharded_heatmaps",
@@ -60,6 +58,10 @@ SHARDED_TABLES = [
     "sharded_session_replay_events",
     "sharded_sessions",
 ]
+# Continue backing up sharded_events in EU using CH BACKUP. For US we
+# already switched to Vector based approach.
+if settings.CLOUD_DEPLOYMENT == "EU":
+    SHARDED_TABLES.append("sharded_events")
 
 NON_SHARDED_TABLES = [
     "asyncdeletion",

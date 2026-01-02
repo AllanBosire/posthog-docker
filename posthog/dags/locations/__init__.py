@@ -5,7 +5,7 @@ import dagster_slack
 from dagster_aws.s3.io_manager import s3_pickle_io_manager
 from dagster_aws.s3.resources import S3Resource
 
-from dags.common import ClickhouseClusterResource, PostgresResource, RedisResource
+from posthog.dags.common.resources import ClickhouseClusterResource, PostgresResource, RedisResource
 
 # Define resources for different environments
 resources_by_env = {

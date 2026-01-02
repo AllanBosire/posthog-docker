@@ -1,6 +1,6 @@
 import dagster
 
-from dags import (
+from posthog.dags import (
     delete_persons_from_trigger_log,
     ingestion_assets,
     persondistinctids_without_person_cleanup,

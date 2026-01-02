@@ -15,8 +15,7 @@ from dagster_aws.s3 import S3Resource
 from posthog import settings
 from posthog.clickhouse.client.connection import Workload
 from posthog.clickhouse.cluster import ClickhouseCluster
-
-from dags.backups import (
+from posthog.dags.backups import (
     Backup,
     BackupConfig,
     BackupStatus,

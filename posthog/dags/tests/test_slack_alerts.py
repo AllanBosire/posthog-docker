@@ -3,8 +3,8 @@ from unittest import mock
 import dagster
 from dagster import DagsterRunStatus
 
-from dags.common import JobOwners
-from dags.slack_alerts import get_job_owner_for_alert, should_suppress_alert
+from posthog.dags.common import JobOwners
+from posthog.dags.slack_alerts import get_job_owner_for_alert, should_suppress_alert
 
 
 class TestSlackAlertsRouting:

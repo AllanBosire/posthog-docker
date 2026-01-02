@@ -1,6 +1,6 @@
 import dagster
 
-from dags import exchange_rate
+from products.revenue_analytics.dags import exchange_rate
 
 from . import resources
 

@@ -1,1 +1,0 @@
-git -c merge.allowUnrelatedHistories=true subtree pull --prefix=posthog posthog master --squash

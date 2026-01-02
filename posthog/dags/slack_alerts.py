@@ -6,19 +6,19 @@ import dagster
 import dagster_slack
 from dagster import DagsterRunStatus, RunsFilter
 
-from dags.common import JobOwners
+from posthog.dags.common import JobOwners
 
 notification_channel_per_team = {
     JobOwners.TEAM_ANALYTICS_PLATFORM.value: "#alerts-analytics-platform",
     JobOwners.TEAM_CLICKHOUSE.value: "#alerts-clickhouse",
-    JobOwners.TEAM_DATA_WAREHOUSE.value: "#alerts-data-warehouse",
+    JobOwners.TEAM_DATA_STACK.value: "#alerts-data-warehouse",
     JobOwners.TEAM_ERROR_TRACKING.value: "#alerts-error-tracking",
     JobOwners.TEAM_EXPERIMENTS.value: "#alerts-experiments-dagster",
     JobOwners.TEAM_GROWTH.value: "#alerts-growth",
-    JobOwners.TEAM_LLMA.value: "#alerts-llm-analytics",
+    JobOwners.TEAM_LLM_ANALYTICS.value: "#alerts-llm-analytics",
     JobOwners.TEAM_INGESTION.value: "#alerts-ingestion",
-    JobOwners.TEAM_MAX_AI.value: "#alerts-max-ai",
-    JobOwners.TEAM_REVENUE_ANALYTICS.value: "#alerts-revenue-analytics",
+    JobOwners.TEAM_POSTHOG_AI.value: "#alerts-max-ai",
+    JobOwners.TEAM_REVENUE_ANALYTICS.value: "#alerts-growth",
     JobOwners.TEAM_WEB_ANALYTICS.value: "#alerts-web-analytics",
 }
 

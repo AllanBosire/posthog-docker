@@ -8,10 +8,7 @@ from freezegun import freeze_time
 from clickhouse_driver import Client
 
 from posthog.clickhouse.cluster import ClickhouseCluster
-from posthog.models.async_deletion import AsyncDeletion, DeletionType
-from posthog.models.person.sql import PERSON_DISTINCT_ID_OVERRIDES_TABLE
-
-from dags.deletes import (
+from posthog.dags.deletes import (
     AdhocEventDeletesDictionary,
     AdhocEventDeletesTable,
     MonthlyCleanupConfig,
@@ -22,6 +19,8 @@ from dags.deletes import (
     find_partitions_to_cleanup,
     monthly_old_events_cleanup_job,
 )
+from posthog.models.async_deletion import AsyncDeletion, DeletionType
+from posthog.models.person.sql import PERSON_DISTINCT_ID_OVERRIDES_TABLE
 
 
 @pytest.mark.django_db

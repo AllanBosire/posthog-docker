@@ -1,6 +1,6 @@
 import dagster
 
-from dags import (
+from posthog.dags import (
     backups,
     ch_examples,
     deletes,

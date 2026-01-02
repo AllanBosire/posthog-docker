@@ -23,6 +23,8 @@ from posthog.clickhouse.cluster import (
     Query,
 )
 from posthog.clickhouse.plugin_log_entries import PLUGIN_LOG_ENTRIES_TABLE
+from posthog.dags.common import JobOwners
+from posthog.dags.person_overrides import squash_person_overrides
 from posthog.models.async_deletion import AsyncDeletion, DeletionType
 from posthog.models.event.sql import EVENTS_DATA_TABLE
 from posthog.models.group.sql import GROUPS_TABLE
@@ -32,9 +34,6 @@ from posthog.models.person.sql import (
     PERSON_STATIC_COHORT_TABLE,
     PERSONS_TABLE,
 )
-
-from dags.common import JobOwners
-from dags.person_overrides import squash_person_overrides
 
 
 class DeleteConfig(dagster.Config):

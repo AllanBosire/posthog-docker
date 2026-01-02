@@ -1,4 +1,4 @@
-# PostHog Dagster DAGs
+# Posthog DAGs
 
 This directory contains [Dagster](https://dagster.io/) data pipelines (DAGs) for PostHog. Dagster is a data orchestration framework that allows us to define, schedule, and monitor data workflows.
 
@@ -20,6 +20,8 @@ Dagster is an open-source data orchestration tool designed to help you define an
 - Individual DAG files (e.g., `exchange_rate.py`, `deletes.py`, `person_overrides.py`)
 - `tests/`: Tests for the DAGs
 
+Each individual product can also define their own DAGs on `products/<product>/dags`. They will be instantiated into a location in here. We'll eventually move all of the individual DAGs from this folder to inside one of the products but that's WIP.
+
 ### Cloud access for posthog employees
 
 Ask someone on the #team-infrastructure or #team-clickhouse to add you to Dagster Cloud. You might also want to join the #dagster-posthog slack channel.
@@ -33,7 +35,7 @@ To set up a new team with their own Dagster definitions and Slack alerts, follow
    ```python
    import dagster
 
-   from dags import my_module  # Import your DAGs
+   from posthog.dags import my_module  # Import your DAGs
 
    from . import resources  # Import shared resources (if needed)
 
@@ -62,7 +64,7 @@ To set up a new team with their own Dagster definitions and Slack alerts, follow
 
    ```yaml
    load_from:
-     - python_module: dags.locations.your_team
+     - python_module: posthog.dags.locations.your_team
    ```
 
    **Note**: Only add locations that should run locally. Heavy operations should remain commented out.
@@ -171,34 +173,16 @@ When adding a new DAG:
 
 1. Create a new Python file for your DAG
 2. Define your assets, ops, and jobs
-3. Import and register them in the relevant file in `dags/locations/`
+3. Import and register them in the relevant file in `posthog/dags/locations/`
 4. Add appropriate tests in the `tests/` directory
 
 ## Running Tests
 
-Tests are implemented using pytest. The following command will run all DAG tests:
+Tests are implemented using pytest. You can use your usual `pytest` commands
 
 ```bash
 # From the project root
-pytest dags/
-```
-
-To run a specific test file:
-
-```bash
-pytest dags/tests/test_exchange_rate.py
-```
-
-To run a specific test:
-
-```bash
-pytest dags/tests/test_exchange_rate.py::test_name
-```
-
-Add `-v` for verbose output:
-
-```bash
-pytest -v dags/tests/test_exchange_rate.py
+pytest posthog/dags/ products/**/dags/
 ```
 
 ### Web Analytics Pre-Aggregated Tables
@@ -206,7 +190,7 @@ pytest -v dags/tests/test_exchange_rate.py
 **Note:** For materializing web analytics preaggregated tables locally (e.g., during development or testing), you may want to use a higher partition count to process more data in a single run:
 
 ```bash
-DAGSTER_WEB_PREAGGREGATED_MAX_PARTITIONS_PER_RUN=3000 DEBUG=1 dagster dev -m dags.definitions
+DAGSTER_WEB_PREAGGREGATED_MAX_PARTITIONS_PER_RUN=3000 DEBUG=1 dagster dev -m posthog.dags.definitions
 ```
 
 This will allow backfills to process up to 3000 partitions per run instead of the default, significantly reducing the number of individual runs needed for large historical backfills.
@@ -252,7 +236,7 @@ concurrency:
 DAGSTER_WEB_PREAGGREGATED_MAX_PARTITIONS_PER_RUN=1  # Force small partitions per run to create multiple runs
 
 ```bash
-export DAGSTER_HOME=$(pwd)/.dagster_home && DAGSTER_WEB_PREAGGREGATED_MAX_PARTITIONS_PER_RUN=1 DEBUG=1 dagster dev -m dags.definitions
+export DAGSTER_HOME=$(pwd)/.dagster_home && DAGSTER_WEB_PREAGGREGATED_MAX_PARTITIONS_PER_RUN=1 DEBUG=1 dagster dev -m posthog.dags.definitions
 ````
 
 #### Testing

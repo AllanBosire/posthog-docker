@@ -12,8 +12,7 @@ import pydantic
 from clickhouse_driver import Client
 
 from posthog.clickhouse.cluster import ClickhouseCluster, Query
-
-from dags.materialized_columns import (
+from posthog.dags.materialized_columns import (
     MaterializationConfig,
     PartitionRange,
     join_mappings,

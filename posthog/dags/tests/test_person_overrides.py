@@ -5,8 +5,7 @@ import dagster
 from clickhouse_driver import Client
 
 from posthog.clickhouse.cluster import ClickhouseCluster
-
-from dags.person_overrides import (
+from posthog.dags.person_overrides import (
     GetExistingDictionaryConfig,
     PersonOverridesSnapshotDictionary,
     PersonOverridesSnapshotTable,

@@ -10,8 +10,7 @@ from dagster_k8s import k8s_job_executor
 
 from posthog.clickhouse.cluster import ClickhouseCluster
 from posthog.clickhouse.custom_metrics import MetricsClient
-
-from dags.common import JobOwners
+from posthog.dags.common import JobOwners
 
 MAX_RETRY_ATTEMPTS = 5
 METRIC_PUBLISH_INTERVAL = 100

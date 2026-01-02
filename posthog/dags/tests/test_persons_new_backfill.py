@@ -5,7 +5,12 @@ from unittest.mock import MagicMock, patch
 import psycopg2.errors
 from dagster import build_op_context
 
-from dags.persons_new_backfill import PersonsNewBackfillConfig, copy_chunk, create_chunks_for_pnb, get_id_range_for_pnb
+from posthog.dags.persons_new_backfill import (
+    PersonsNewBackfillConfig,
+    copy_chunk,
+    create_chunks_for_pnb,
+    get_id_range_for_pnb,
+)
 
 
 class TestCreateChunksForPnb:
@@ -346,7 +351,7 @@ class TestCopyChunk:
 
         mock_run = MagicMock(job_name="test_job")
         with (
-            patch("dags.persons_new_backfill.time.sleep"),
+            patch("posthog.dags.persons_new_backfill.time.sleep"),
             patch.object(type(context), "run", PropertyMock(return_value=mock_run)),
         ):
             copy_chunk(context, config, chunk)

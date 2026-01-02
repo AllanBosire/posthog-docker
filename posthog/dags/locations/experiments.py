@@ -1,12 +1,12 @@
 """
 This module organizes experiment assets into a complete Dagster location.
-It takes the individual assets defined in experiment_regular_metrics_timeseries.py and experiment_saved_metrics_timeseries.py and bundles them
+It takes the individual assets defined in products.experiments.dags and bundles them
 with shared resources to create a complete Dagster definitions object.
 """
 
 import dagster
 
-from dags import (
+from products.experiments.dags import (
     experiment_regular_metrics_timeseries,
     experiment_saved_metrics_timeseries,
     experiment_timeseries_recalculation,
